@@ -31,6 +31,12 @@ public class WebSecurityConfig {
     /* Security 필터 체인 생성: antMatchers 설정은 여기서 진행 */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+
+        String[] permitAllEndPoints = {
+                "/api/login", "/api/logout", "/api/signup", "/favicon.ico",
+                "/static/js/**", "/static/image/**", "/static/css/**", "/static/scss/**"
+        };
+
         httpSecurity
                 .csrf().disable() // csrf 기능 비활성화
                 .exceptionHandling()
@@ -44,9 +50,7 @@ public class WebSecurityConfig {
                 .antMatchers("/api/admin/**").hasRole("ADMIN")
                 .antMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.GET, "/api/schedule/**").permitAll()
-                .antMatchers("/api/login", "/api/logout", "/api/signup").permitAll()
-                .antMatchers("/favicon.ico").permitAll()
-                .antMatchers("/static/js/**", "/static/image/**", "/static/css/**", "/static/scss/**").permitAll()
+                .antMatchers(permitAllEndPoints).permitAll()
                 .anyRequest().authenticated() // 위에 지정한 antMatchers 이외에는 모두 인증 받아야 한다.
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider));
