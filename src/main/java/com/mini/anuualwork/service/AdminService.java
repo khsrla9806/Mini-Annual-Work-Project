@@ -1,8 +1,9 @@
 package com.mini.anuualwork.service;
 
 import com.mini.anuualwork.core.ApiDataResponse;
-import com.mini.anuualwork.dto.AdminDto;
+import com.mini.anuualwork.dto.AdminDto.*;
 import com.mini.anuualwork.entity.Member;
+import com.mini.anuualwork.entity.Work;
 import com.mini.anuualwork.repository.AdminAnnualRepository;
 import com.mini.anuualwork.repository.AdminMemberRepository;
 import com.mini.anuualwork.repository.AdminWorkRepository;
@@ -22,17 +23,17 @@ public class AdminService {
     private final AdminWorkRepository workRepository;
     private final AdminAnnualRepository annualRepository;
 
-    public ApiDataResponse<List<AdminDto.RequestAllMembers>> getAllMembers() {
+    public ApiDataResponse<List<RequestAllMembers>> getAllMembers() {
         int year = LocalDateTime.now().getYear();
 
-        List<AdminDto.RequestAllMembers> allMembers =
+        List<RequestAllMembers> allMembers =
                 memberRepository.getAllMembersWithAnnualCountAndWorkCount(TOTAL_ANNUAL_COUNT, year);
 
         return new ApiDataResponse<>(allMembers);
     }
 
     @Transactional
-    public ApiDataResponse<AdminDto.ResponseSuccess> deleteMember(Long id) {
+    public ApiDataResponse<ResponseSuccess> deleteMember(Long id) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
 
@@ -40,6 +41,17 @@ public class AdminService {
         workRepository.deleteAllByMember(member);
         memberRepository.delete(member);
 
-        return new ApiDataResponse<>(new AdminDto.ResponseSuccess("사원 계정이 정상적으로 삭제되었습니다."));
+        return new ApiDataResponse<>(new ResponseSuccess("사원 계정이 정상적으로 삭제되었습니다."));
+    }
+
+    @Transactional
+    public ApiDataResponse<ResponseSuccess> createWork(RequestCreateWork dto) {
+        Member member = memberRepository.findById(dto.getId())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
+
+        Work work = dto.toEntity(member);
+        workRepository.save(work);
+
+        return new ApiDataResponse<>(new ResponseSuccess("당직등록에 성공했습니다."));
     }
 }
