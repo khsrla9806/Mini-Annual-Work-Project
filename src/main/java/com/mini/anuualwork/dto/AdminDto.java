@@ -2,9 +2,11 @@ package com.mini.anuualwork.dto;
 
 import com.mini.anuualwork.entity.Member;
 import com.mini.anuualwork.entity.Work;
+import com.mini.anuualwork.entity.type.AnnualStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
@@ -44,5 +46,19 @@ public class AdminDto {
 
             return work;
         }
+    }
+
+    /* Projection 결과를 받아서 @Value()에서 Client 에서 원하는 데이터로 가공 */
+    public interface ResponseAnnual {
+        Long getAnnualId();
+        String getName();
+
+        @Value("#{'#' + target.employeeNumber.substring(0, 4)}")
+        String getEmployeeNumber();
+
+        @Value("#{target.date.toString().split('T')[0]}")
+        String getDate();
+        AnnualStatus getStatus();
+        void setEmployeeNumber();
     }
 }

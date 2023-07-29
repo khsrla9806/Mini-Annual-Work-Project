@@ -24,10 +24,8 @@ public class AdminService {
     private final AdminAnnualRepository annualRepository;
 
     public ApiDataResponse<List<RequestAllMembers>> getAllMembers() {
-        int year = LocalDateTime.now().getYear();
-
         List<RequestAllMembers> allMembers =
-                memberRepository.getAllMembersWithAnnualCountAndWorkCount(TOTAL_ANNUAL_COUNT, year);
+                memberRepository.getAllMembersWithAnnualCountAndWorkCount(TOTAL_ANNUAL_COUNT, getThisYear());
 
         return new ApiDataResponse<>(allMembers);
     }
@@ -63,5 +61,15 @@ public class AdminService {
         workRepository.delete(work);
 
         return new ApiDataResponse<>(new ResponseSuccess("당직이 삭제되었습니다."));
+    }
+
+    public ApiDataResponse<List<ResponseAnnual>> getAnnualList() {
+        List<ResponseAnnual> allAnnuals = this.annualRepository.findAnnualsIsUnapprovedOrCanceled(getThisYear());
+
+        return new ApiDataResponse<>(allAnnuals);
+    }
+
+    private int getThisYear() {
+        return LocalDateTime.now().getYear();
     }
 }

@@ -37,5 +37,8 @@ public class AdminController {
         return this.adminService.deleteWork(workId);
     }
 
-
+    @GetMapping("/annual")
+    public ApiDataResponse<List<ResponseAnnual>> annualList() {
+        return this.adminService.getAnnualList();
+    }
 }
