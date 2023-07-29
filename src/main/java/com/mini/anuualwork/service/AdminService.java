@@ -94,4 +94,24 @@ public class AdminService {
 
         return new ApiDataResponse<>(responseDto);
     }
+
+    @Transactional
+    public ApiDataResponse<ResponseSuccess> rejectAnnual(Long annualId) {
+        Annual annual = annualRepository.findById(annualId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 연차 정보입니다."));
+
+        AnnualStatus status = annual.getStatus();
+        ResponseSuccess responseDto = new ResponseSuccess();
+        if (status == AnnualStatus.APPROVED) {
+            throw new RuntimeException("이미 승인된 연차 정보입니다.");
+        } else if (status == AnnualStatus.UNAPPROVED) {
+            annualRepository.delete(annual);
+            responseDto.setMessage("연차 신청을 거부했습니다. 해당 연차 데이터는 삭제됩니다.");
+        } else if (status == AnnualStatus.CANCELED) {
+            annual.setStatus(AnnualStatus.APPROVED);
+            responseDto.setMessage("연차 취소 신청이 거부되었습니다.");
+        }
+
+        return new ApiDataResponse<>(responseDto);
+    }
 }

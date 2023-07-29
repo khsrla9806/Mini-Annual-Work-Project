@@ -46,4 +46,9 @@ public class AdminController {
     public ApiDataResponse<ResponseSuccess> approveAnnual(@PathVariable Long annualId) {
         return this.adminService.approveAnnual(annualId);
     }
+
+    @DeleteMapping("/annual/{annualId}")
+    public ApiDataResponse<ResponseSuccess> rejectAnnual(@PathVariable Long annualId) {
+        return this.adminService.rejectAnnual(annualId);
+    }
 }
