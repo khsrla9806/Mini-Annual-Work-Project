@@ -31,4 +31,11 @@ public class AdminController {
     public ApiDataResponse<ResponseSuccess> createWork(@RequestBody RequestCreateWork dto) {
         return this.adminService.createWork(dto);
     }
+
+    @DeleteMapping("/work/{workId}")
+    public ApiDataResponse<ResponseSuccess> deleteWork(@PathVariable Long workId) {
+        return this.adminService.deleteWork(workId);
+    }
+
+
 }

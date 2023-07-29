@@ -54,4 +54,14 @@ public class AdminService {
 
         return new ApiDataResponse<>(new ResponseSuccess("당직등록에 성공했습니다."));
     }
+
+    @Transactional
+    public ApiDataResponse<ResponseSuccess> deleteWork(Long workId) {
+        Work work = workRepository.findById(workId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 당직 정보입니다."));
+
+        workRepository.delete(work);
+
+        return new ApiDataResponse<>(new ResponseSuccess("당직이 삭제되었습니다."));
+    }
 }
