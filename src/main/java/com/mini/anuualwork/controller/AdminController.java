@@ -41,4 +41,9 @@ public class AdminController {
     public ApiDataResponse<List<ResponseAnnual>> annualList() {
         return this.adminService.getAnnualList();
     }
+
+    @PostMapping("/annual/{annualId}")
+    public ApiDataResponse<ResponseSuccess> approveAnnual(@PathVariable Long annualId) {
+        return this.adminService.approveAnnual(annualId);
+    }
 }

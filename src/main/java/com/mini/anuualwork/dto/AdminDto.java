@@ -3,9 +3,7 @@ package com.mini.anuualwork.dto;
 import com.mini.anuualwork.entity.Member;
 import com.mini.anuualwork.entity.Work;
 import com.mini.anuualwork.entity.type.AnnualStatus;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.validation.constraints.Future;
@@ -24,8 +22,10 @@ public class AdminDto {
         Integer getWorkDay();
     }
 
+    @NoArgsConstructor
     @AllArgsConstructor
     @Getter
+    @Setter
     public static class ResponseSuccess {
         private String message;
     }
